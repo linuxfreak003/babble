@@ -26,7 +26,7 @@ func DownloadURL(url string) (string, error) {
 		return "", fmt.Errorf("error copying response body: %s", err)
 	}
 
-	return string(buffer.Bytes()), nil
+	return buffer.String(), nil
 }
 
 func ReadFile(path string) (string, error) {
