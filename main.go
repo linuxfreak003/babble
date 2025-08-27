@@ -7,8 +7,9 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"strings"
 
+	"github.com/linuxfreak003/babble/adapters"
+	"github.com/linuxfreak003/babble/markov"
 	"github.com/sirupsen/logrus"
 )
 
@@ -67,10 +68,16 @@ func main() {
 	default:
 		fmt.Println("Unknown source type")
 	}
+	fmt.Println(data)
 
-	words := strings.Split(data, " ")
+	GenerateChain(outputLength)
+}
 
-	chain := NewChain(chainLength)
-	chain.Build(words)
-	chain.Print(outputLength)
+func GenerateChain(n int) {
+	gen := adapters.NewNumberGenerator()
+	chain := markov.NewChain(gen)
+	for i := 0; i < n; i++ {
+		s := chain.NextState()
+		fmt.Println(s)
+	}
 }
