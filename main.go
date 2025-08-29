@@ -70,14 +70,14 @@ func main() {
 	}
 	fmt.Println(data)
 
-	GenerateChain(outputLength)
+	GenerateChain(outputLength, data, chainLength)
 }
 
-func GenerateChain(n int) {
-	gen := adapters.NewNumberGenerator()
+func GenerateChain(n int, source string, ngrams int) {
+	gen := adapters.NewTextGenerator(source, ngrams)
 	chain := markov.NewChain(gen)
 	for i := 0; i < n; i++ {
 		s := chain.NextState()
-		fmt.Println(s)
+		fmt.Printf("%s ", s)
 	}
 }
