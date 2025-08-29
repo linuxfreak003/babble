@@ -68,16 +68,15 @@ func main() {
 	default:
 		fmt.Println("Unknown source type")
 	}
-	fmt.Println(data)
-
-	GenerateChain(outputLength, data, chainLength)
+	GenerateChain(outputLength, chainLength, data)
 }
 
-func GenerateChain(n int, source string, ngrams int) {
-	gen := adapters.NewTextGenerator(source, ngrams)
+func GenerateChain(n int, ngrams int, sources ...string) {
+	gen := adapters.NewTextGenerator(ngrams, sources...)
 	chain := markov.NewChain(gen)
 	for i := 0; i < n; i++ {
 		s := chain.NextState()
 		fmt.Printf("%s ", s)
 	}
+	fmt.Println()
 }

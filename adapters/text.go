@@ -23,37 +23,38 @@ func (s textState) String() string {
 }
 
 type textGen struct {
-	source string
-	table  map[string][]string
-	n      int
+	sources []string
+	table   map[string][]string
+	n       int
 }
 
-func NewTextGenerator(source string, n int) markov.Generator[textState] {
+func NewTextGenerator(n int, sources ...string) markov.Generator[textState] {
 	return &textGen{
-		source: source,
-		n:      n,
+		sources: sources,
+		n:       n,
 	}
 }
 
 func (g *textGen) Initialize() {
 	// Parse source
 	g.table = make(map[string][]string)
-	words := strings.Fields(g.source)
-	for i, word := range words {
-		var key string
-		switch {
-		case i == 0:
-			// pass
-		case i == 1:
-			key = words[0]
-		case i < g.n:
-			key = strings.Join(words[0:i], " ")
-		default:
-			key = strings.Join(words[i-g.n:i], " ")
+	for _, source := range g.sources {
+		words := strings.Fields(source)
+		for i, word := range words {
+			var key string
+			switch {
+			case i == 0:
+				// pass
+			case i == 1:
+				key = words[0]
+			case i < g.n:
+				key = strings.Join(words[0:i], " ")
+			default:
+				key = strings.Join(words[i-g.n:i], " ")
+			}
+			g.table[key] = append(g.table[key], word)
 		}
-		g.table[key] = append(g.table[key], word)
 	}
-
 }
 
 func (g *textGen) Generate(s textState) textState {
